@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -44,7 +44,7 @@ jobs:
 
       - name: Normalize & Generate App Icons
         run: |
-          python3 -m pip install --upgrade Pillow
+          python3 -m pip install --upgrade --break-system-packages Pillow
 
           python3 - << 'EOF'
           import os
