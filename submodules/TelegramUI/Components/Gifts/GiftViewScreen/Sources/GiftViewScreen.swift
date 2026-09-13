@@ -2502,10 +2502,8 @@ private final class GiftViewSheetContent: CombinedComponent {
         let spaceRegex = try? NSRegularExpression(pattern: "\\[(.*?)\\]", options: [])
         
         let giftCompositionExternalState = GiftCompositionComponent.ExternalState()
-        
-        let forceType: (Body) -> Body = { $0 }
-        
-        return forceType { context in
+
+        return { context in
             let environment = context.environment[ViewControllerComponentContainer.Environment.self].value
             
             let component = context.component
