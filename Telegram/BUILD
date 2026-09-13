@@ -331,7 +331,7 @@ alternate_icon_folders = [
     "PremiumTurbo",
 ]
 
-composer_icon_folders = [""]
+composer_icon_folders = []
 
 [
     filegroup(
