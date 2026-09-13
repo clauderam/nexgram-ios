@@ -331,7 +331,7 @@ alternate_icon_folders = [
     "PremiumTurbo",
 ]
 
-composer_icon_folders = ["Telegram"]
+composer_icon_folders = [""]
 
 [
     filegroup(
@@ -420,7 +420,7 @@ plist_fragment(
             <string>{telegram_bundle_id}</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>telegram</string>
+                <string>nexgram</string>
             </array>
         </dict>
         <dict>
@@ -430,7 +430,7 @@ plist_fragment(
             <string>{telegram_bundle_id}.compatibility</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>tg</string>
+                <string>nxg</string>
                 <string>tonsite</string>
             </array>
         </dict>
@@ -514,12 +514,13 @@ icloud_fragment = "" if not telegram_enable_icloud else """
     telegram_icloud_environment="Production" if telegram_aps_environment == "production" else "Development"
 )
 
-associated_domains_fragment = "" if telegram_bundle_id not in official_bundle_ids else """
+associated_domains_fragment = """
 <key>com.apple.developer.associated-domains</key>
 <array>
     <string>applinks:nexgram.org</string>
     <string>applinks:*.nexgram.org</string>
-    <string>webcredentials:nexgram.org</string>
+    <string>applinks:nexgram.org?mode=developer</string>
+    <string>applinks:*.nexgram.org?mode=developer</string>
 </array>
 """
 
@@ -1102,25 +1103,6 @@ swift_library(
     ],
 )
 
-'''genrule(
-    name = "SetMinOsVersionNotificationContentExtension",
-    cmd_bash =
-"""
-    name=NotificationContentExtension.appex
-    cat $(location PatchMinOSVersion.source.sh) | sed -e "s/<<<MIN_OS_VERSION>>>/10\\.0/g" | sed -e "s/<<<NAME>>>/$$name/g" > $(location SetMinOsVersionNotificationContentExtension.sh)
-""",
-    srcs = [
-        "PatchMinOSVersion.source.sh",
-    ],
-    outs = [
-        "SetMinOsVersionNotificationContentExtension.sh",
-    ],
-    executable = True,
-    visibility = [
-        "//visibility:public",
-    ]
-)'''
-
 ios_extension(
     name = "NotificationContentExtension",
     bundle_id = "{telegram_bundle_id}.NotificationContent".format(
@@ -1344,25 +1326,6 @@ swift_library(
     ],
 )
 
-'''genrule(
-    name = "SetMinOsVersionIntentsExtension",
-    cmd_bash =
-"""
-    name=IntentsExtension.appex
-    cat $(location PatchMinOSVersion.source.sh) | sed -e "s/<<<MIN_OS_VERSION>>>/10\\.0/g" | sed -e "s/<<<NAME>>>/$$name/g" > $(location SetMinOsVersionIntentsExtension.sh)
-""",
-    srcs = [
-        "PatchMinOSVersion.source.sh",
-    ],
-    outs = [
-        "SetMinOsVersionIntentsExtension.sh",
-    ],
-    executable = True,
-    visibility = [
-        "//visibility:public",
-    ]
-)'''
-
 ios_extension(
     name = "IntentsExtension",
     bundle_id = "{telegram_bundle_id}.SiriIntents".format(
@@ -1438,25 +1401,6 @@ swift_library(
         "//submodules/BroadcastUploadHelpers:BroadcastUploadHelpers",
     ],
 )
-
-'''genrule(
-    name = "SetMinOsVersionBroadcastUploadExtension",
-    cmd_bash =
-"""
-    name=BroadcastUploadExtension.appex
-    cat $(location PatchMinOSVersion.source.sh) | sed -e "s/<<<MIN_OS_VERSION>>>/11\\.0/g" | sed -e "s/<<<NAME>>>/$$name/g" > $(location SetMinOsVersionBroadcastUploadExtension.sh)
-""",
-    srcs = [
-        "PatchMinOSVersion.source.sh",
-    ],
-    outs = [
-        "SetMinOsVersionBroadcastUploadExtension.sh",
-    ],
-    executable = True,
-    visibility = [
-        "//visibility:public",
-    ]
-)'''
 
 ios_extension(
     name = "BroadcastUploadExtension",
@@ -1775,7 +1719,7 @@ ios_application(
         ":RequiredDeviceCapabilitiesPlist",
         ":UrlTypesInfoPlist",
     ],
-    app_icons = [ ":{}_icon".format(name) for name in composer_icon_folders ],
+    app_icons = [":DefaultAppIcon"],
     alternate_icons = [
         ":{}".format(name) for name in alternate_icon_folders
     ],
