@@ -2503,7 +2503,9 @@ private final class GiftViewSheetContent: CombinedComponent {
         
         let giftCompositionExternalState = GiftCompositionComponent.ExternalState()
         
-        return { (context: Context) -> CGSize in
+        let forceType: (Body) -> Body = { $0 }
+        
+        return forceType { context in
             let environment = context.environment[ViewControllerComponentContainer.Environment.self].value
             
             let component = context.component
